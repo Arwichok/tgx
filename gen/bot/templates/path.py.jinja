@@ -1,0 +1,36 @@
+# {{ obj.snake }}.py
+from __future__ import annotations
+{%- for tp in obj.typings %}
+from typing import {{ tp -}}
+{% endfor %}
+from typing import ClassVar
+from ._base import Path, Result
+{% if obj.is_field -%}
+from ._base import field
+{%- endif %}
+{% for sh in obj.schemas %}
+from ..schemas.{{ sh.snake }} import {{ sh.camel }}
+{% endfor %}
+class {{ obj.camel }}(
+    Path[{{ obj.response }}],
+    kw_only=True,
+    omit_defaults=True
+):
+    """
+    {{ obj.md_desc | join | wordwrap(70, True, '\n    ') }}
+    """
+
+    {# __info__: ClassVar[PathInfo] = PathInfo("{{ obj.name }}", Result[{{ obj.response }}]) #}
+
+{%- for param in obj.params %}
+    {% include "param.py.jinja" -%}
+{% endfor %}
+
+    def build_result(self, data) -> {{ obj.response }}:
+        response = self.build_response(data, Result[{{obj.response}}])
+        return response.result
+
+    def build_request(self) -> Request:
+        return Request(
+            url="/{{ obj.name }}"
+        )

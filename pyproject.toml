@@ -1,0 +1,39 @@
+[project]
+name = "tgx"
+version = "0.0.dev0"
+description = ""
+authors = [
+    {name = "Arwichok", email = "arwichok@gmail.com"},
+]
+dependencies = [
+    "msgspec>=0.18.2",
+    "apix>=0.0.dev6",
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.dev-dependencies]
+gen = [
+    "jinja2>=3.1.2",
+    "inflection>=0.5.1",
+    "beautifulsoup4>=4.12.2",
+    "types-beautifulsoup4>=4.12.0.6",
+    "lxml>=4.9.3",
+    "markdownify>=0.11.6",
+]
+lint = [
+    "ruff>=0.0.291",
+    "mypy>=1.5.1",
+]
+test = [
+    "pytest>=7.4.2",
+]
+
+[tool.pdm.scripts]
+lint = "ruff src"
+genbot = {call = "gen.bot.generator:run"}
